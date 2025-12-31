@@ -95,29 +95,29 @@ impl<S: Storage, C: Coord, N: Notifier> BBQueue<S, C, N> {
 
 #[cfg(feature = "alloc")]
 impl<S: Storage, C: Coord, N: Notifier> crate::queue::ArcBBQueue<S, C, N> {
-    pub fn framed_producer(&self) -> FramedProducer<alloc::sync::Arc<BBQueue<S, C, N>>> {
+    pub fn framed_producer(&self) -> FramedProducer<Self> {
         FramedProducer {
-            bbq: self.0.bbq_ref(),
+            bbq: self.bbq_ref(),
             pd: PhantomData,
         }
     }
 
-    pub fn framed_consumer(&self) -> FramedConsumer<alloc::sync::Arc<BBQueue<S, C, N>>> {
+    pub fn framed_consumer(&self) -> FramedConsumer<Self> {
         FramedConsumer {
-            bbq: self.0.bbq_ref(),
+            bbq: self.bbq_ref(),
             pd: PhantomData,
         }
     }
 
-    pub fn stream_producer(&self) -> StreamProducer<alloc::sync::Arc<BBQueue<S, C, N>>> {
+    pub fn stream_producer(&self) -> StreamProducer<Self> {
         StreamProducer {
-            bbq: self.0.bbq_ref(),
+            bbq: self.bbq_ref(),
         }
     }
 
-    pub fn stream_consumer(&self) -> StreamConsumer<alloc::sync::Arc<BBQueue<S, C, N>>> {
+    pub fn stream_consumer(&self) -> StreamConsumer<Self> {
         StreamConsumer {
-            bbq: self.0.bbq_ref(),
+            bbq: self.bbq_ref(),
         }
     }
 }
