@@ -37,6 +37,21 @@ impl<S: Storage, C: Coord, N: Notifier> BBQueue<S, C, N> {
 pub struct ArcBBQueue<S, C, N>(pub(crate) alloc::sync::Arc<BBQueue<S, C, N>>);
 
 #[cfg(feature = "alloc")]
+impl<S, C, N> Clone for ArcBBQueue<S, C, N> {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
+#[cfg(feature = "alloc")]
+impl<S, C, N> ::core::ops::Deref for ArcBBQueue<S, C, N> {
+    type Target = BBQueue<S, C, N>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+#[cfg(feature = "alloc")]
 impl<S: Storage, C: Coord, N: Notifier> ArcBBQueue<S, C, N> {
     pub fn new_with_storage(sto: S) -> Self {
         Self(alloc::sync::Arc::new(BBQueue::new_with_storage(sto)))

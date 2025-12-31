@@ -17,6 +17,8 @@
 
 use core::{marker::PhantomData, ops::Deref};
 
+#[cfg(feature = "alloc")]
+use crate::queue::ArcBBQueue;
 use crate::{
     prod_cons::{
         framed::{FramedConsumer, FramedProducer, LenHeader},
@@ -82,6 +84,19 @@ impl<S: Storage, C: Coord, N: Notifier> BbqHandle for &'_ BBQueue<S, C, N> {
 
 #[cfg(feature = "alloc")]
 impl<S: Storage, C: Coord, N: Notifier> BbqHandle for alloc::sync::Arc<BBQueue<S, C, N>> {
+    type Target = Self;
+    type Storage = S;
+    type Coord = C;
+    type Notifier = N;
+
+    #[inline(always)]
+    fn bbq_ref(&self) -> Self::Target {
+        self.clone()
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<S: Storage, C: Coord, N: Notifier> BbqHandle for ArcBBQueue<S, C, N> {
     type Target = Self;
     type Storage = S;
     type Coord = C;
